@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Produtos</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        /* Estilos para os produtos */
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px; /* Aumentei o espaçamento entre os produtos */
+            justify-content: center;
+        }
+
+        .product {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 22%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px; /* Adicionei margem na parte inferior para mais espaçamento */
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product h2 {
+            font-size: 1.2em;
+            margin: 15px 0;
+            color: #333;
+        }
+
+        .product p {
+            font-size: 1em;
+            color: #666;
+        }
+
+        .product button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .product button:hover {
+            background-color: #218838;
+        }
+
+        /* Estilos para o carrinho */
+        #cart {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #cart button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #cart button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos para o formulário de adicionar produto */
+        #add-product-form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #add-product-form input {
+            margin: 5px;
+            padding: 10px;
+            width: 200px;
+        }
+
+        #add-product-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #add-product-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Loja de Produtos</h1>
+
+        <!-- Formulário para Adicionar Produto -->
+        <div id="add-product-form">
+            <h2>Adicionar Produto</h2>
+            <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="Nome do Produto" required>
+                <input type="text" name="price" placeholder="Preço do Produto" required>
+                <input type="file" name="image" accept="image/*" required>
+                <button type="submit">Adicionar Produto</button>
+            </form>
+        </div>
+
+        <!-- Carrinho de Compras -->
+        <div id="cart">
+            <a href="{{ url_for('cart') }}">
+                <button>Ver Carrinho</button>
+            </a>
+            <a href="{{ url_for('register') }}">
+                <button>Cadastrar-se</button>
+            </a>
+        </div>
+
+        <!-- Lista de Produtos -->
+        <div class="products">
+            {% for product in products %}
+            <div class="product">
+                <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                <h2>{{ product.name }}</h2>
+                <p>Preço: R$ {{ product.price }}</p>
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+                    <button type="submit">Adicionar ao Carrinho</button>
+                </form>
+                <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" style="display: inline;">
+                    <button type="submit">Remover Produto</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function viewCart() {
+            window.location.href = "{{ url_for('cart') }}";
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

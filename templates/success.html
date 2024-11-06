@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra Concluída</title>
+</head>
+<body>
+    <h1>Compra Concluída</h1>
+    <p>Obrigado pela sua compra!</p>
+    <p>Total: R$ {{ total_price }}</p>
+    <p>Forma de pagamento: {{ payment_method }}</p>
+    <a href="{{ url_for('index') }}">Voltar à loja</a>
+</body>
+</html>

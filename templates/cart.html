@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        #total {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        #checkout-button {
+            display: block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        #checkout-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Carrinho de Compras</h1>
+    {% if cart_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                    <th>Total</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>R$ {{ item.product.price }}</td>
+                        <td>R$ {{ item.product.price * item.quantity }}</td>
+                        <td>
+                            <form action="{{ url_for('remove_from_cart', product_id=item.product.id) }}" method="POST" style="display: inline;">
+                                <button type="submit">Remover</button> <!-- Botão de remover -->
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3 id="total">Total: R$ {{ total_price }}</h3>
+        <form action="{{ url_for('checkout') }}" method="POST">
+            <button id="checkout-button" type="submit">Finalizar Compra</button>
+        </form>
+    {% else %}
+        <p>Seu carrinho está vazio.</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Continuar Comprando</a>
+</body>
+</html>
+
+
+
+
+
+

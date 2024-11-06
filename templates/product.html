@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h2>{{ product.name }}</h2>
+<p>Preço: R$ {{ product.price }}</p>
+<a href="/cart">Adicionar ao Carrinho</a>
+{% endblock %}
