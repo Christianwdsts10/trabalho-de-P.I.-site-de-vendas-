@@ -10,30 +10,20 @@
             const parcelas = parseInt(document.getElementById('installments').value);
             if (parcelas > 0) {
                 const valorParcela = (total / parcelas).toFixed(2); // Calcula o valor da parcela
-                document.getElementById('valor_parcela').innerText = `Valor da parcela: R$ ${valorParcela.replace('.', ',')}`;
-            } else {
-                document.getElementById('valor_parcela').innerText = ''; // Limpa o valor das parcelas
+                document.getElementById('valor_parcela').innerText = 'R$ ' + valorParcela.replace('.', ',');
             }
         }
 
-        function toggleParcelas() {
-            const paymentMethod = document.getElementById('payment_method').value;
-            const creditOptions = document.getElementById('credit_options');
-            const cardNumberField = document.getElementById('card_number_field');
-
-            if (paymentMethod === 'credit' || paymentMethod === 'debit') {
-                creditOptions.style.display = paymentMethod === 'credit' ? 'block' : 'none'; // Exibe opções de parcelamento apenas se for crédito
-                cardNumberField.style.display = 'block'; // Exibe o campo do número do cartão
-                if (paymentMethod === 'credit') {
-                    calcularParcelas(); // Calcula parcelas ao mostrar
-                } else {
-                    document.getElementById('valor_parcela').innerText = ''; // Limpa o valor das parcelas
-                }
-            } else {
-                creditOptions.style.display = 'none'; // Esconde opções de parcelamento
-                cardNumberField.style.display = 'none'; // Esconde o campo do número do cartão
-                document.getElementById('valor_parcela').innerText = ''; // Limpa o valor das parcelas
-            }
+        // Função para limpar o carrinho
+        function limparCarrinho() {
+            fetch('/limpar_carrinho', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Carrinho limpo com sucesso");
+                    }
+                })
+                .catch(error => console.error('Erro ao limpar carrinho:', error));
         }
     </script>
 </head>
@@ -42,17 +32,19 @@
     <p id="total">Total: R$ {{ total_price }}</p>
 
     <form action="{{ url_for('checkout') }}" method="POST">
-        <label for="payment_method">Escolha a forma de pagamento:</label>
-        <select name="payment_method" id="payment_method" required onchange="toggleParcelas()">
+        <!-- Opções de pagamento -->
+        <label for="payment_method">Forma de pagamento:</label>
+        <select id="payment_method" name="payment_method" required>
             <option value="boleto">Boleto</option>
             <option value="pix">Pix</option>
-            <option value="debit">Cartão de Débito</option>
-            <option value="credit">Cartão de Crédito</option>
+            <option value="debit_card">Cartão de Débito</option>
+            <option value="card">Cartão de Crédito</option>
         </select>
 
-        <div id="credit_options" style="display: none;">
-            <label for="installments">Parcelamento:</label>
-            <select name="installments" id="installments" onchange="calcularParcelas()">
+        <!-- Exibição das parcelas (apenas se cartão de crédito for selecionado) -->
+        <div id="parcelas-container" style="display: none;">
+            <label for="installments">Parcelas:</label>
+            <select id="installments" name="installments" onchange="calcularParcelas()">
                 <option value="1">1x</option>
                 <option value="2">2x</option>
                 <option value="3">3x</option>
@@ -66,62 +58,87 @@
                 <option value="11">11x</option>
                 <option value="12">12x</option>
             </select>
+            <p>Valor por parcela: <span id="valor_parcela">R$ {{ total_price }}</span></p>
         </div>
-        
-        <p id="valor_parcela"></p> <!-- Inicialmente vazio, será preenchido ao escolher crédito -->
 
-        <!-- Campos adicionais -->
-        <div>
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required placeholder="Digite seu CPF">
-        </div>
-        
+        <!-- CPF do usuário -->
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" required placeholder="Digite seu CPF">
+        <br><br>
+
+        <!-- Número do cartão (apenas se cartão de débito ou crédito for selecionado) -->
         <div id="card_number_field" style="display: none;">
             <label for="card_number">Número do Cartão:</label>
-            <input type="text" id="card_number" name="card_number" required placeholder="Digite o número do cartão">
+            <input type="text" id="card_number" name="card_number" placeholder="Digite o número do cartão">
         </div>
-        
-        <div>
-            <h3>Informações de Endereço</h3>
-            <p>Por favor, forneça seu endereço completo:</p>
-            <label for="address">Endereço:</label>
-            <input type="text" id="address" name="address" required placeholder="Digite seu endereço">
-        </div>
+        <br><br>
 
-        <div>
-            <label for="house_number">Número:</label>
-            <input type="text" id="house_number" name="house_number" required placeholder="Número da casa">
-        </div>
+        <!-- Endereço de entrega -->
+        <h3>Endereço de entrega</h3>
+        <label for="street">Rua:</label>
+        <input type="text" id="street" name="street" required placeholder="Rua">
+        <br><br>
 
-        <div>
-            <label for="neighborhood">Bairro:</label>
-            <input type="text" id="neighborhood" name="neighborhood" required placeholder="Digite seu bairro">
-        </div>
+        <label for="number">Número:</label>
+        <input type="text" id="number" name="number" required placeholder="Número">
+        <br><br>
 
-        <div>
-            <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" required placeholder="Digite seu CEP">
-        </div>
+        <label for="neighborhood">Bairro:</label>
+        <input type="text" id="neighborhood" name="neighborhood" required placeholder="Bairro">
+        <br><br>
 
-        <div>
-            <label for="state">Estado:</label>
-            <input type="text" id="state" name="state" required placeholder="Digite seu estado">
-        </div>
+        <label for="city">Cidade:</label>
+        <input type="text" id="city" name="city" required placeholder="Cidade">
+        <br><br>
 
-        <div>
-            <label for="city">Cidade:</label>
-            <input type="text" id="city" name="city" required placeholder="Digite sua cidade">
-        </div>
+        <label for="state">Estado:</label>
+        <input type="text" id="state" name="state" required placeholder="Estado">
+        <br><br>
 
+        <label for="zipcode">CEP:</label>
+        <input type="text" id="zipcode" name="zipcode" required placeholder="00000-000">
+        <br><br>
+
+        <label for="phone">Telefone:</label>
+        <input type="tel" id="phone" name="phone" required placeholder="(00) 00000-0000">
+        <br><br>
+
+        <!-- Botão para finalizar a compra -->
         <button type="submit">Finalizar Compra</button>
     </form>
 
     <script>
-        // Chama a função para atualizar a exibição de parcelas ao carregar a página
-        toggleParcelas();
+        // Exibir parcelas e número do cartão dependendo da forma de pagamento
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const parcelasContainer = document.getElementById('parcelas-container');
+        const cardNumberField = document.getElementById('card_number_field');
+        const cardNumberInput = document.getElementById('card_number');
+
+        paymentMethodSelect.addEventListener('change', function() {
+            if (paymentMethodSelect.value === 'card' || paymentMethodSelect.value === 'debit_card') {
+                // Mostrar o campo para o número do cartão
+                cardNumberField.style.display = 'block';
+                // Mostrar o campo de parcelas somente se for cartão de crédito
+                if (paymentMethodSelect.value === 'card') {
+                    parcelasContainer.style.display = 'block';
+                } else {
+                    parcelasContainer.style.display = 'none';
+                }
+            } else {
+                // Esconde o campo para o número do cartão e de parcelas
+                cardNumberField.style.display = 'none';
+                parcelasContainer.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 

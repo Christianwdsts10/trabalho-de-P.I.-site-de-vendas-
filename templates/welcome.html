@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .welcome-message {
+            font-size: 24px;
+            color: #007bff;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bem-vindo de volta ao CLISS!</h1>
+    <div class="welcome-message">
+        <p>Bem-vindo, {{ username }}!</p>  <!-- Exibe o nome do usuário -->
+    </div>
+
+    <!-- Botão para redirecionar para a página de compras -->
+    <form action="{{ url_for('index') }}" method="GET">
+        <button type="submit">Comece a Comprar</button>
+    </form>
+
+</body>
+</html>
+
+

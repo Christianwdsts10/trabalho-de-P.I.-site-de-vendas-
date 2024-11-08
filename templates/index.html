@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja de Produtos</title>
+    <title>CLISS</title>
     <style>
         /* Estilos gerais */
         body {
@@ -19,17 +19,31 @@
             margin: auto;
         }
 
-        h1 {
+        /* Faixa cinza para o título */
+        .header {
+            background-color: #d3d3d3; /* Cinza claro */
+            padding: 20px;
             text-align: center;
-            margin-top: 20px;
+        }
+
+        .header h1 {
             color: #333;
+            margin: 0;
+        }
+
+        /* Estilos para a mensagem de boas-vindas */
+        .welcome-message {
+            text-align: center;
+            font-size: 1.2em;
+            color: #333;
+            margin-top: 10px;
         }
 
         /* Estilos para os produtos */
         .products {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px; /* Aumentei o espaçamento entre os produtos */
+            gap: 30px;
             justify-content: center;
         }
 
@@ -41,7 +55,7 @@
             width: 22%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-bottom: 20px; /* Adicionei margem na parte inferior para mais espaçamento */
+            margin-bottom: 20px;
         }
 
         .product img {
@@ -130,7 +144,13 @@
 <body>
 
     <div class="container">
-        <h1>Loja de Produtos</h1>
+        <!-- Faixa cinza com o título da loja -->
+        <div class="header">
+            <h1>CLISS</h1>
+        </div>
+        
+        <!-- Mensagem de boas-vindas centralizada -->
+        <h4 class="welcome-message">Seja bem-vindo ao CLISS! Agradecemos sua presença. Boas compras!!</h4>
 
         <!-- Formulário para Adicionar Produto -->
         <div id="add-product-form">
@@ -178,6 +198,7 @@
     </script>
 </body>
 </html>
+
 
 
 

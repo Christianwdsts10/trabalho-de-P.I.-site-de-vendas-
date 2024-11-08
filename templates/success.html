@@ -8,8 +8,9 @@
 <body>
     <h1>Compra Concluída</h1>
     <p>Obrigado pela sua compra!</p>
-    <p>Total: R$ {{ total_price }}</p>
-    <p>Forma de pagamento: {{ payment_method }}</p>
+    <p>Total: R$ {{ session['total_price'] }}</p>
+    <p>Forma de pagamento: {{ session['payment_method'] }}</p>
     <a href="{{ url_for('index') }}">Voltar à loja</a>
 </body>
 </html>
+
